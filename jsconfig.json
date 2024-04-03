@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "#root/*": ["./*"],
+      "#src/*": ["./src/*"],
+      "#controller/*": ["./src/controller/*"],
+      "#middleware/*": ["./src/middleware/*"],
+      "#router/*": ["./src/router/*"],
+      "#utils/*": ["./src/utils/*"]
+    },
+  }
+}
