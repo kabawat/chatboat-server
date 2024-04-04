@@ -3,9 +3,10 @@
     "paths": {
       "#root/*": ["./*"],
       "#src/*": ["./src/*"],
-      "#controller/*": ["./src/controller/*"],
-      "#middleware/*": ["./src/middleware/*"],
-      "#router/*": ["./src/router/*"],
+      "#config/*": ["./src/config/*"],
+      "#controller/*": ["./src/controllers/*"],
+      "#middleware/*": ["./src/middlewares/*"],
+      "#routers/*": ["./src/routers/*"],
       "#utils/*": ["./src/utils/*"]
     },
   }

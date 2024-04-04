@@ -15,9 +15,10 @@
   "imports": {
     "#root/*": "./*.js",
     "#src/*": "./src/*.js",
-    "#controller/*": "./src/controllers/*.js",
-    "#router/*": "./src/routers/*.js",
-    "#utils/*": "./src/utilss/*.js",
+    "#config/*": "./src/config/*.js",
+    "#controllers/*": "./src/controllers/*.js",
+    "#routers/*": "./src/routers/*.js",
+    "#utils/*": "./src/utils/*.js",
     "#middleware/*": "./src/middlewares/*.js"
   }
 }
