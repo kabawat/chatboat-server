@@ -10,7 +10,7 @@ const authRouter = Router()
 
 authRouter.route('/send-otp').post(otpOnEmail, createInity)
 authRouter.route('/verify-email').post(verifyVerificationToken, verifyEmail)
-authRouter.route('/signup').get(signup);
+authRouter.route('/signup').post(verifyVerificationToken, signup);
 
 authRouter.route('/login').get(login);
 
