@@ -8,6 +8,7 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
     "module-alias": "^2.2.3",
     "mongoose": "^8.2.4",
     "nodemailer": "^6.9.13"
@@ -17,8 +18,9 @@
     "#src/*": "./src/*.js",
     "#config/*": "./src/config/*.js",
     "#controllers/*": "./src/controllers/*.js",
+    "#db/*": "./src/db/*.js",
     "#routers/*": "./src/routers/*.js",
     "#utils/*": "./src/utils/*.js",
-    "#middleware/*": "./src/middlewares/*.js"
+    "#middlewares/*": "./src/middlewares/*.js"
   }
 }

@@ -5,7 +5,8 @@
       "#src/*": ["./src/*"],
       "#config/*": ["./src/config/*"],
       "#controller/*": ["./src/controllers/*"],
-      "#middleware/*": ["./src/middlewares/*"],
+      "#db/*": ["./src/db/*"],
+      "#middlewares/*": ["./src/middlewares/*"],
       "#routers/*": ["./src/routers/*"],
       "#utils/*": ["./src/utils/*"]
     },
