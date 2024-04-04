@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('#db/models/user');
+const userModal = require('#db/models/user');
 
 // verify Verification token 
 async function verifyVerificationToken(req, res, next) {
@@ -7,7 +7,7 @@ async function verifyVerificationToken(req, res, next) {
         const VerificationTokens = req.headers['x-verification-tokens'];
         if (VerificationTokens) {
             const verify = await jwt.verify(VerificationTokens, process.env.JWT_SECRET);
-            const user = await User.findOne({ email: verify.email, isVerified: false })
+            const user = await userModal.findOne({ email: verify.email, isVerified: false })
             if (user) {
                 req.body.user = user
             } else {

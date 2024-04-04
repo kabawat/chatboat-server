@@ -8,9 +8,10 @@ const { Router } = require("express");
 const verifyEmail = require("#controllers/auth/signup/verifyEmail");
 const authRouter = Router()
 
-authRouter.route('/login').get(login);
 authRouter.route('/send-otp').post(otpOnEmail, createInity)
 authRouter.route('/verify-email').post(verifyVerificationToken, verifyEmail)
 authRouter.route('/signup').get(signup);
+
+authRouter.route('/login').get(login);
 
 module.exports = authRouter

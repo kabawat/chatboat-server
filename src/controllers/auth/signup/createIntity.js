@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken")
-const User = require("#db/models/user");
+const userModal = require("#db/models/user");
 const { extractUsername } = require("#utils/extract_username");
 
 
 async function createInity(req, res) {
     try {
-        const user = new User({
+        const user = new userModal({
             username: extractUsername(req.body.email),
             email: req.body.email,
             firstName: req.body.firstName,
