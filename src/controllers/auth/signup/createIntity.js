@@ -8,6 +8,10 @@ const bcrypt = require('bcrypt')
 // If the user doesn't exist, it creates a new user with the provided information.
 async function createInity(req, res) {
     try {
+        const { firstName, lastName } = req.body
+        if (!firstName || !lastName) {
+            throw new Error("Hold up! Names can't be blank. Fill 'em in!");
+        }
         // Generate a JWT token for the user's email
         const token = jwt.sign({ email: req.body.email }, process.env.JWT_SECRET);
 
@@ -17,8 +21,8 @@ async function createInity(req, res) {
         // If the user exists and hasn't verified their email yet
         if (userExists && !userExists?.isVerified) {
             // Update the user's information with the provided data
-            userExists['firstName'] = req.body.firstName;
-            userExists['lastName'] = req.body.lastName;
+            userExists['firstName'] = firstName;
+            userExists['lastName'] = lastName;
             userExists['otp'] = req.body.otp;
             userExists['password'] = await bcrypt.hash(req.body.otp, 10);
             userExists['token'] = token;
@@ -36,8 +40,8 @@ async function createInity(req, res) {
             const user = new userModal({
                 username: extractUsername(req.body.email),
                 email: req.body.email,
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
+                firstName: firstName,
+                lastName: lastName,
                 otp: req.body.otp,
                 password: await bcrypt.hash(req.body.otp, 10),
                 token: token

@@ -5,7 +5,6 @@ async function signup(req, res) {
         const hashedPwd = await bcrypt.hash(password, 10);
         user['password'] = hashedPwd
         user['username'] = username;
-        user['isVerified'] = true
         let result = await user.save()
         res.status(200).json({
             message: "Sign up successful",

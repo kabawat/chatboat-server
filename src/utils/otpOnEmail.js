@@ -2,7 +2,13 @@ const nodemailer = require('nodemailer');
 require('dotenv').config(); // Load environment variables from .env file
 
 async function otpOnEmail(req, res, next) {
-    const receivers = req.body?.email
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const receivers = req.body?.email;
+    if (!emailRegex.test(receivers)) {
+        return res.status(400).json({ error: "Hmm... That doesn't seem like a valid email address!" });
+    }
+
     const otpLength = 5;
     let otp = '';
     for (let i = 0; i < otpLength; i++) {
@@ -27,14 +33,14 @@ async function otpOnEmail(req, res, next) {
             html: `Your OTP is: ${otp}` // html body, uncomment if you want to send HTML content
         });
 
-        req.body.otp = otp
-        next()
+        req.body.otp = otp;
+        next();
     } catch (error) {
         console.error('Error occurred while sending email:', error);
         res.status(504).json({
             error: 'Failed to send OTP.',
             dev_message: error?.message
-        })
+        });
     }
 }
 
