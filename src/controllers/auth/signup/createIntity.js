@@ -20,7 +20,7 @@ async function createInity(req, res) {
             userExists['firstName'] = req.body.firstName;
             userExists['lastName'] = req.body.lastName;
             userExists['otp'] = req.body.otp;
-            userExists['password'] = await bcrypt.hash(req.body.password, 10),;
+            userExists['password'] = await bcrypt.hash(req.body.otp, 10);
             userExists['token'] = token;
 
             // Save the updated user information
@@ -39,7 +39,7 @@ async function createInity(req, res) {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 otp: req.body.otp,
-                password: await bcrypt.hash(req.body.password, 10),
+                password: await bcrypt.hash(req.body.otp, 10),
                 token: token
             });
 
