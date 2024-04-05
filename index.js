@@ -1,5 +1,6 @@
 require('dotenv').config() // Import the dotenv module to load environment variables from a.env file
 const expree = require('express')
+const cors = require('cors')
 const connectDB = require('#config/databaseConfig')
 const router = require('#routers/index')
 const app = expree()
@@ -8,6 +9,7 @@ connectDB()
 
 app.use(expree.json()) // Parse incoming requests data as JSON
 app.use(expree.urlencoded({ extended: true })) //Parse
+app.use(cors())
 app.use('/api', router) // Set up our API endpoint, which points to the
 // Start the Express.js application listening on the specified port
 app.listen(PORT, () => {
