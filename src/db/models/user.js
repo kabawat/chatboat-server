@@ -24,8 +24,12 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    profilePicture: {
+        asset_id: String,
+        public_id: String,
+        secure_url: String
+    },
     token: String,
-    profilePicture: String,
     socketId: String
 
 }, { timestamps: true })
