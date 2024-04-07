@@ -26,5 +26,10 @@
     "#routers/*": "./src/routers/*.js",
     "#utils/*": "./src/utils/*.js",
     "#middlewares/*": "./src/middlewares/*.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./index.js",
+    "build": "echo successfull"
   }
 }
