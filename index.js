@@ -5,9 +5,11 @@ const cors = require('cors')
 const connectDB = require('#config/databaseConfig')
 const router = require('#routers/index')
 const app = expres()
-const { PORT } = process.env
+const { PORT } = process.env || 2917
 connectDB()
-
+add.get("/",(req, res) => {
+    res.send('https://kabawat.com')
+})
 app.use(expres.json()) // Parse incoming requests data as JSON
 app.use(expres.urlencoded({ extended: true }))
 app.use(cors())
