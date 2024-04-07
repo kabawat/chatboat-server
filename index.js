@@ -7,8 +7,8 @@ const router = require('#routers/index')
 const app = expres()
 const { PORT } = process.env || 2917
 connectDB()
-add.get("/",(req, res) => {
-    res.send('https://kabawat.com')
+app.get("/",(req, res) => {
+    res.send(`<a href='https://kabawat.com'>welcome to kabawat studio</a>`)
 })
 app.use(expres.json()) // Parse incoming requests data as JSON
 app.use(expres.urlencoded({ extended: true }))
