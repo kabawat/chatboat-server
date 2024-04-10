@@ -14,7 +14,6 @@ authRouter.route('/send-otp').post(otpOnEmail, createInity)
 authRouter.route('/verify-email').post(verifyVerificationToken, verifyEmail)
 authRouter.route('/registration').post(verifyVerificationToken, signup);
 authRouter.route('/finish-signup').post(verifyVerificationToken, uploadImage, finishSignup);
-authRouter.route('/upload-image').post(uploadImage)
 authRouter.route('/login').post(login);
 
 module.exports = authRouter

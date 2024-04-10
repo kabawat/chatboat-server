@@ -31,7 +31,7 @@ io.on("connection", (socket) => {
     console.log(socket.id)
     socket.on('login', (username) => {
         connectedClients[socket.id] = username;
-        console.log(`${username} logged in.`);
+        console.log(`${username} online`);
     });
 
     // Listen for disconnect event

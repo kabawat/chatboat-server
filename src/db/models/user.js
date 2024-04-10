@@ -15,10 +15,15 @@ const userSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
+
     firstName: String,
     lastName: String,
     dateOfBirth: Date,
     phoneNumber: String,
+    about: {
+        type: String,
+        default:"I'm Using Query Boat"
+    },
     otp: String, // one time password for verification of the account
     isVerified: {
         type: Boolean,

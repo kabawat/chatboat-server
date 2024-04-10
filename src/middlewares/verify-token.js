@@ -31,6 +31,13 @@ async function verifyAuthToken(req, res, next) {
         const auth_tokens = req.headers['x-auth-tokens']
         if (auth_tokens) {
             const verify = await jwt.verify(auth_tokens, process.env.JWT_SECRET);
+
+            if (verify?.id) {
+                const user = await userModal.findOne({ _id: verify?.id, isVerified: true })
+                req.body.user = user
+            } else {
+                throw new Error("Invalid token! Please login first");
+            }
         }
         else {
             throw new Error('No Token Provided');
