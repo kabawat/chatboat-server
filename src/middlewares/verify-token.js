@@ -29,8 +29,8 @@ async function verifyVerificationToken(req, res, next) {
 
 // veirfy auth token 
 async function verifyAuthToken(req, res, next) {
+    const auth_tokens = req.headers['x-auth-tokens']
     try {
-        const auth_tokens = req.headers['x-auth-tokens']
         if (auth_tokens) {
             const verify = await jwt.verify(auth_tokens, process.env.JWT_AUTH_SECRET);
 
