@@ -13,7 +13,7 @@ async function createInity(req, res) {
             throw new Error("Hold up! Names can't be blank. Fill 'em in!");
         }
         // Generate a JWT token for the user's email
-        const token = jwt.sign({ email: req.body.email }, process.env.JWT_SECRET);
+        const token = jwt.sign({ email: req.body.email }, process.env.JWT_AUTH_SECRET);
 
         // Check if the user already exists in the database
         const userExists = await userModal.findOne({ email: req.body.email });

@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 async function finishSignup(req, res) {
     const { user } = req.body;
     try {
-        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_AUTH_SECRET);
         const dataSet = {
             token: token,
             isVerified: true

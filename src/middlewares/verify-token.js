@@ -6,7 +6,7 @@ async function verifyVerificationToken(req, res, next) {
     try {
         const VerificationTokens = req.headers['x-verification-tokens'];
         if (VerificationTokens) {
-            const verify = await jwt.verify(VerificationTokens, process.env.JWT_SECRET);
+            const verify = await jwt.verify(VerificationTokens, process.env.JWT_AUTH_SECRET);
             const user = await userModal.findOne({ email: verify.email, isVerified: false })
             if (user) {
                 req.body.user = user
@@ -30,7 +30,7 @@ async function verifyAuthToken(req, res, next) {
     try {
         const auth_tokens = req.headers['x-auth-tokens']
         if (auth_tokens) {
-            const verify = await jwt.verify(auth_tokens, process.env.JWT_SECRET);
+            const verify = await jwt.verify(auth_tokens, process.env.JWT_AUTH_SECRET);
 
             if (verify?.id) {
                 const user = await userModal.findOne({ _id: verify?.id, isVerified: true })
@@ -54,12 +54,17 @@ async function verifyAuthToken(req, res, next) {
 async function verifyAccessToken(req, res, next) {
     try {
         const access_tokens = req.headers['x-access-tokens']
-        if (VerificationTokens) {
-            const verify = await jwt.verify(VerificationTokens, process.env.JWT_SECRET);
-        }
-        else {
+        if (!access_tokens) {
             throw new Error('No Token Provided');
         }
+        const verify = await jwt.verify(access_tokens, process.env.JWT_ACCESS_SECRET);
+
+        const { _id, username, email } = verify
+        const user = await userModal.findOne({ _id, username, email, isVerified: true, disabled: false })
+        if (!user) {
+            throw new Error("Invalid token! Please login first");
+        }
+        req.body.user = user
         next();
     } catch (error) {
         return res.status(401).json({

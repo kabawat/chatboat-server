@@ -22,10 +22,14 @@ const userSchema = new mongoose.Schema({
     phoneNumber: String,
     about: {
         type: String,
-        default:"I'm Using Query Boat"
+        default: "I'm Using Query Boat"
     },
     otp: String, // one time password for verification of the account
     isVerified: {
+        type: Boolean,
+        default: false
+    },
+    disabled: {
         type: Boolean,
         default: false
     },

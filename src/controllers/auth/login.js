@@ -11,8 +11,8 @@ async function login(req, res) {
         if (!isMatch) {
             throw new Error("Password mismatch! Try again or sign up.")
         } else {
-            const token = await jwt.sign({ id: isUserExist._id }, process.env.JWT_SECRET, { expiresIn: '30d' })
-            const isUpdate = await userModal.updateOne({ _id: isUserExist?._id }, { token })
+            const token = await jwt.sign({ id: isUserExist._id }, process.env.JWT_AUTH_SECRET, { expiresIn: '30d' })
+            const isUpdate = await userModal.updateOne({ _id: isUserExist?._id }, { token, disabled: false })
             res.status(200).json({
                 message: "login successful",
                 status: true,
