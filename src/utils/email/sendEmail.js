@@ -1,20 +1,21 @@
+const sendNotification = require('#root/src/web-hooks/slack');
 const nodemailer = require('nodemailer');
 require('dotenv').config(); // Load environment variables from .env file
 
 async function otp_send_on_email(receivers) {
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(receivers)) {
-        return res.status(400).json({ error: "Hmm... That doesn't seem like a valid email address!" });
-    }
-
-    const otpLength = 5;
-    let otp = '';
-    for (let i = 0; i < otpLength; i++) {
-        otp += Math.floor(Math.random() * 10); // Generate a random digit between 0 and 9
-    }
-
     try {
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(receivers)) {
+            return res.status(400).json({ error: "Hmm... That doesn't seem like a valid email address!" });
+        }
+
+        const otpLength = 5;
+        let otp = '';
+        for (let i = 0; i < otpLength; i++) {
+            otp += Math.floor(Math.random() * 10); // Generate a random digit between 0 and 9
+        }
+
         // Create a nodemailer transporter using your SMTP settings
         let transporter = nodemailer.createTransport({
             service: 'Gmail', // e.g., 'Gmail'
@@ -37,6 +38,7 @@ async function otp_send_on_email(receivers) {
             otp: otp
         };
     } catch (error) {
+        sendNotification(error, 'otp_send_on_email', receivers);
         return {
             status: false,
             message: "Error sending OTP",

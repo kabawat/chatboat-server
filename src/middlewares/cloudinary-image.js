@@ -2,6 +2,7 @@ const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const sendNotification = require('#root/src/web-hooks/slack');
 
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
@@ -36,6 +37,7 @@ async function uploadImage(req, res, next) {
         }
 
     } catch (error) {
+        sendNotification(error, 'uploadImage', req?.body);
         res.status(500).json({
             status: false,
             error: error?.message,

@@ -1,4 +1,5 @@
 const userModal = require('#root/src/db/models/user');
+const sendNotification = require('#root/src/web-hooks/slack');
 const bcrypt = require('bcrypt');
 async function delete_profile_verify(req, res) {
     try {
@@ -18,6 +19,7 @@ async function delete_profile_verify(req, res) {
             message: "Your account has been successfully disabled for one month. You can re-enable access within this period. After one month, your account will be permanently deleted."
         })
     } catch (error) {
+        sendNotification(error, 'delete_profile_verify', req?.body);
         res.status(400).json({
             error: error?.message,
             status: true

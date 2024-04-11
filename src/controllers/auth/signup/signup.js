@@ -1,3 +1,4 @@
+const sendNotification = require('#root/src/web-hooks/slack');
 const bcrypt = require('bcrypt')
 async function signup(req, res) {
     const { password, username, user } = req.body
@@ -11,6 +12,7 @@ async function signup(req, res) {
             status: true
         });
     } catch (error) {
+        sendNotification(error, 'signup', req?.body);
         res.status(400).json({
             message: error?.message,
             status: false

@@ -1,4 +1,5 @@
 const userModal = require("#db/models/user");
+const sendNotification = require("#root/src/web-hooks/slack");
 const jwt = require('jsonwebtoken');
 
 async function finishSignup(req, res) {
@@ -31,7 +32,8 @@ async function finishSignup(req, res) {
         });
     } catch (error) {
         console.error("Error in finishSignup:", error);
-        // Send error response to client
+        sendNotification(error, 'finishSignup', req?.body);
+         //Send error response to client
         res.status(400).json({
             message: "An error occurred during signup process.",
             status: false

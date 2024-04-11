@@ -1,4 +1,5 @@
 const userModal = require("#root/src/db/models/user")
+const sendNotification = require("#root/src/web-hooks/slack")
 const jwt = require('jsonwebtoken')
 async function update_profile(req, res) {
     try {
@@ -25,6 +26,7 @@ async function update_profile(req, res) {
             });
         }
         else {
+            sendNotification(error, 'update_profile', req?.body);
             res.status(409).json({
                 dev_message: error.message,
                 error: error.message

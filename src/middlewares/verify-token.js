@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const userModal = require('#db/models/user');
+const sendNotification = require('#root/src/web-hooks/slack');
 
 // verify Verification token 
 async function verifyVerificationToken(req, res, next) {
@@ -19,6 +20,7 @@ async function verifyVerificationToken(req, res, next) {
         }
         next();
     } catch (error) {
+        sendNotification(error, 'verifyVerificationToken', { ...req?.body, VerificationTokens });
         return res.status(401).json({
             error: error?.message
         });
@@ -44,6 +46,7 @@ async function verifyAuthToken(req, res, next) {
         }
         next();
     } catch (error) {
+        sendNotification(error, 'verifyAuthToken', { ...req?.body, auth_tokens });
         return res.status(401).json({
             error: error?.message
         });
@@ -67,6 +70,7 @@ async function verifyAccessToken(req, res, next) {
         req.body.user = user
         next();
     } catch (error) {
+        sendNotification(error, 'verifyAccessToken', { ...req?.body, access_tokens });
         return res.status(401).json({
             error: error?.message
         });

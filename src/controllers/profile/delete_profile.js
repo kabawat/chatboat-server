@@ -37,7 +37,7 @@ async function delete_profile(req, res) {
         }
 
         // Generate a new JWT token for the user
-        const token = await jwt.sign({ _id, email, username }, process.env.JWT_ACCESS_SECRET);
+        const token = await jwt.sign({ _id, email, username }, process.env.JWT_ACCESS_SECRET, { expiresIn: '5m' });
 
         // Return a success response with the message and the new token
         res.status(200).json({

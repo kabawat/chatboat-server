@@ -1,4 +1,5 @@
-const userModal = require("#root/src/db/models/user")
+const userModal = require("#root/src/db/models/user");
+const sendNotification = require("#root/src/web-hooks/slack");
 async function get_profile(req, res) {
     try {
         let dataList = { ...req.body.user }
@@ -13,6 +14,7 @@ async function get_profile(req, res) {
             data: dataList?._doc
         })
     } catch (error) {
+        sendNotification(error, 'get_profile', req?.body);
         res.status(409).json({
             error: error.message
         })

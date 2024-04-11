@@ -1,4 +1,5 @@
 const userModal = require("#root/src/db/models/user");
+const sendNotification = require("#root/src/web-hooks/slack");
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 async function login(req, res) {
@@ -20,6 +21,7 @@ async function login(req, res) {
             });
         }
     } catch (error) {
+        sendNotification(error, 'login', req?.body);
         res.status(400).json({
             error: error.message,
             status: false
