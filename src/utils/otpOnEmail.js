@@ -5,7 +5,7 @@ require('dotenv').config(); // Load environment variables from .env file
 async function otpOnEmail(req, res, next) {
     // Validate email format
     try {
-        const emailRege = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const receivers = req.body?.email;
         if (!emailRegex.test(receivers)) {
             return res.status(400).json({ error: "Hmm... That doesn't seem like a valid email address!" });
