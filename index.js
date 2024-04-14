@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors(
-    { origin: ["http://localhost:3000", "http://127.0.0.1:5173", "http://localhost:5173"] }
+    { origin: ["https://chatboat-gamma.vercel.app","http://localhost:3000", "http://127.0.0.1:5173", "http://localhost:5173"] }
 ))
 
 app.use(fileUpload())
@@ -26,7 +26,7 @@ let connectedClients = {};
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
-        origin: ["http://localhost:3000", "http://127.0.0.1:5173", "http://localhost:5173"]
+        origin: ["https://chatboat-gamma.vercel.app", "http://localhost:3000", "http://127.0.0.1:5173", "http://localhost:5173"]
     }
 });
 
