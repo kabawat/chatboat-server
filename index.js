@@ -1,5 +1,5 @@
 require('dotenv').config() // Import the dotenv module to load environment variables from a.env file
-const expres = require('express')
+const express = require('express')
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const fileUpload = require('express-fileupload')
@@ -7,7 +7,7 @@ const cors = require('cors')
 const connectDB = require('#config/databaseConfig')
 const router = require('#routers/index');
 const socket_login = require('#src/socket/login');
-const app = expres()
+const app = express()
 const { PORT } = process.env || 2917
 app.get("/", (req, res) => {
     res.send(`<a href='https://kabawat.com'>welcome to kabawat studio</a>`)
