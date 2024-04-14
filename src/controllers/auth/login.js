@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 async function login(req, res) {
     try {
-        const isUserExist = await userModal.findOne({ email: req.body.email, isVerified: true }, 'password')
+        const isUserExist = await userModal.findOne({ email: req.body.email, isVerified: true }, 'password username')
         if (!isUserExist) {
             throw new Error("Login failed! User not found. Try again or sign up!")
         }
@@ -17,7 +17,9 @@ async function login(req, res) {
             res.status(200).json({
                 message: "login successful",
                 status: true,
-                authToken: token
+                authToken: token,
+                username: isUserExist?.username,
+                _id: isUserExist?._id
             });
         }
     } catch (error) {

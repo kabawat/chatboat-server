@@ -15,7 +15,12 @@ const userSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
-
+    contacts: [
+        {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: "User"
+        }
+    ],
     firstName: String,
     lastName: String,
     dateOfBirth: Date,

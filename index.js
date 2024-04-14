@@ -5,7 +5,8 @@ const { Server } = require("socket.io");
 const fileUpload = require('express-fileupload')
 const cors = require('cors')
 const connectDB = require('#config/databaseConfig')
-const router = require('#routers/index')
+const router = require('#routers/index');
+const socket_login = require('#src/socket/login');
 const app = expres()
 
 const httpServer = createServer(app);
@@ -27,11 +28,15 @@ app.use(fileUpload())
 app.use('/api', router) // Set up our API endpoint, which points to the
 
 let connectedClients = {};
+
+httpServer.listen(PORT, () => {
+    console.log(`http://localhost:${PORT}`)
+})
+
 io.on("connection", (socket) => {
-    console.log(socket.id)
-    socket.on('login', (username) => {
-        connectedClients[socket.id] = username;
-        console.log(`${username} online`);
+    socket.on('login', (data) => {
+        connectedClients[socket.id] = data?.username;
+        socket_login(socket, data)
     });
 
     // Listen for disconnect event
@@ -42,7 +47,3 @@ io.on("connection", (socket) => {
         }
     });
 });
-
-httpServer.listen(PORT, () => {
-    console.log(`http://localhost:${PORT}`)
-})

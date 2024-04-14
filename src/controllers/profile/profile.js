@@ -7,6 +7,7 @@ async function get_profile(req, res) {
             // Check if password property exists before deleting
             if (dataList?._doc.hasOwnProperty('password')) {
                 delete dataList?._doc.password
+                delete dataList?._doc.token
             }
         }
 
