@@ -9,6 +9,7 @@ const router = require('#routers/index');
 const socket_login = require('#src/socket/login');
 const app = express()
 const { PORT } = process.env || 2917
+connectDB()
 app.get("/", (req, res) => {
     res.send(`<a href='https://kabawat.com'>welcome to kabawat studio</a>`)
 })
@@ -16,7 +17,7 @@ app.get("/", (req, res) => {
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors(
-    { origin: ["https://chatboat-gamma.vercel.app","http://localhost:3000", "http://127.0.0.1:5173", "http://localhost:5173"] }
+    { origin: ["https://chatboat-gamma.vercel.app", "http://localhost:3000", "http://127.0.0.1:5173", "http://localhost:5173"] }
 ))
 
 app.use(fileUpload())
@@ -49,7 +50,6 @@ const startSocketServer = () => {
 }
 
 httpServer.listen(PORT, () => {
-    connectDB()
     startSocketServer()
     console.log(`http://localhost:${PORT}`)
 })
