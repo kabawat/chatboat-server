@@ -32,6 +32,9 @@ httpServer.listen(PORT, () => {
 })
 
 io.on("connection", (socket) => {
+    console.log("a user connected", socket.id);
+
+    // Listen for login event
     socket.on('login', (data) => {
         console.log("data : ", data)
         connectedClients[socket.id] = data?.username;
