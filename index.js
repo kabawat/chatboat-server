@@ -7,8 +7,8 @@ const fileUpload = require('express-fileupload')
 const bodyParser = require('body-parser')
 const path = require('path')
 const dot = require('dotenv').config()
-const connectDB = require('#config/databaseConfig')
-const router = require('#routers/index');
+// const connectDB = require('#config/databaseConfig')
+// const router = require('#routers/index');
 const socket_login = require('#src/socket/login');
 const cors = require('cors')
 const port = process.env.PORT || 2917
@@ -22,7 +22,7 @@ app.use(fileUpload())
 app.get("/", (req, res) => {
     res.send(`<a href='https://kabawat.com'>welcome to kabawat studio</a>`)
 })
-app.use('/api', router)
+// app.use('/api', router)
 
 
 const server = http.createServer(app)
@@ -58,6 +58,6 @@ const startSocketServer = () => {
 // server listen 
 server.listen(port, async () => {
     startSocketServer()
-    await connectDB()
+    // await connectDB()
     console.log(`http://localhost:${port}`)
 })
