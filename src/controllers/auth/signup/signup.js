@@ -13,8 +13,12 @@ async function signup(req, res) {
         });
     } catch (error) {
         sendNotification(error, 'signup', req?.body);
+        let message = ""
+        if (error?.code == 11000) {
+            message = `username ${error?.keyValue['username']} alreday exists`
+        }
         res.status(400).json({
-            message: error?.message,
+            message: message ? message : error?.message,
             status: false
         });
     }

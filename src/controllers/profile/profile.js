@@ -2,17 +2,18 @@ const userModal = require("#root/src/db/models/user");
 const sendNotification = require("#root/src/web-hooks/slack");
 async function get_profile(req, res) {
     try {
-        let dataList = { ...req.body.user }
-        if (dataList && typeof dataList === 'object') {
-            // Check if password property exists before deleting
-            if (dataList?._doc.hasOwnProperty('password')) {
-                delete dataList?._doc.password
-                delete dataList?._doc.token
-            }
+        const userRes = await userModal.findOne({ _id: req.body.user?._id }).populate({
+            path: 'contacts',
+            model: 'User',
+            select: 'username email firstName lastName about'
+        })
+        // Check if password property exists before deleting
+        if (userRes?.hasOwnProperty('password')) {
+            delete userRes?._doc.password
+            delete userRes?._doc.token
         }
-
         res.status(200).json({
-            data: dataList?._doc
+            data: userRes
         })
     } catch (error) {
         sendNotification(error, 'get_profile', req?.body);
