@@ -1,13 +1,15 @@
 const express = require('express')
 const http = require('http')
 const { Server } = require('socket.io')
+const swaggerUi = require('swagger-ui-express');
 const app = express()
 const fileUpload = require('express-fileupload')
 const path = require('path')
 const dot = require('dotenv').config()
 const connectDB = require('#config/databaseConfig')
 const router = require('#routers/index');
-const cors = require('cors')
+const cors = require('cors');
+const specs = require('./swagger');
 const port = process.env.PORT || 2917
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -19,11 +21,11 @@ app.get("/", (req, res) => {
     res.send(`<a href='https://kabawat.com'>welcome to kabawat studio</a> <script>window.location.href = "https://kabawat.com"</script>`)
 })
 app.use('/api', router)
-
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 // server listen 
-app.listen(port,  () => {
-    connectDB().then(()=>{
+app.listen(port, () => {
+    connectDB().then(() => {
         console.log('db connect')
     })
-    console.log(`http://localhost:${port}`)
+    console.log(`http://localhost:${port}/docs`)
 })

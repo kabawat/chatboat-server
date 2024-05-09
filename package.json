@@ -17,7 +17,9 @@
     "module-alias": "^2.2.3",
     "mongoose": "^8.2.4",
     "nodemailer": "^6.9.13",
-    "socket.io": "^4.7.5"
+    "socket.io": "^4.7.5",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
   },
   "imports": {
     "#root/*": "./*.js",

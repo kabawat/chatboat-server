@@ -8,6 +8,6 @@ const contactRouter = Router()
 
 contactRouter.route('/').post(verifyAuthToken, add_new_contact)
 contactRouter.route('/').get(verifyAuthToken, get_all_contact)
-contactRouter.route('/contact').get(verifyAuthToken, get_single_contact)
+contactRouter.route('/:contact').get(verifyAuthToken, get_single_contact)
 contactRouter.route('/:contact').delete(verifyAuthToken, delete_contact)
 module.exports = contactRouter

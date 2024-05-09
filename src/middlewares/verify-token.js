@@ -4,8 +4,8 @@ const sendNotification = require('#root/src/web-hooks/slack');
 
 // verify Verification token 
 async function verifyVerificationToken(req, res, next) {
+    const VerificationTokens = req.headers['x-verification-tokens'];
     try {
-        const VerificationTokens = req.headers['x-verification-tokens'];
         if (VerificationTokens) {
             const verify = await jwt.verify(VerificationTokens, process.env.JWT_AUTH_SECRET);
             const user = await userModal.findOne({ email: verify.email, isVerified: false })
@@ -55,8 +55,8 @@ async function verifyAuthToken(req, res, next) {
 
 // verify access token 
 async function verifyAccessToken(req, res, next) {
+    const access_tokens = req.headers['x-access-tokens']
     try {
-        const access_tokens = req.headers['x-access-tokens']
         if (!access_tokens) {
             throw new Error('No Token Provided');
         }

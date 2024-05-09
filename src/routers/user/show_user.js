@@ -2,8 +2,8 @@ const userModal = require("#root/src/db/models/user");
 const sendNotification = require("#root/src/web-hooks/slack");
 
 async function get_all_user(req, res) {
-    console.log("req : ", req.body?.user?.contacts)
     try {
+        // Querying the database for verified users not in the current user's contacts list
         const users = await userModal.find({ isVerified: true, _id: { $nin: req.body?.user?.contacts } }, 'firstName lastName username phoneNumber about profilePicture')
         if (users) {
             res.status(200).json({
