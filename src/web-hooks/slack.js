@@ -57,7 +57,6 @@ function sendNotification(error, functionName, payload, type = 'error') {
             console.error(`Failed to send ${type} notification. Status code: ${response.status}`);
         } else {
             console.log(`${type} notification sent successfully.`);
-            console.log("Response:", response.text());
         }
     }).catch((error) => {
         console.error(`Error sending ${type} notification:`, error);

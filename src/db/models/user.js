@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     contacts: [
         {
             type: mongoose.SchemaTypes.ObjectId,
-            ref: "User"
+            ref: "Contact"
         }
     ],
     firstName: String,

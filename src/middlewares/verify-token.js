@@ -2,13 +2,21 @@ const jwt = require('jsonwebtoken');
 const userModal = require('#db/models/user');
 const sendNotification = require('#root/src/web-hooks/slack');
 
+const exclude = {
+    password: 0,
+    token: 0,
+    otp: 0,
+    isVerified: 0,
+    disabled: 0,
+    socketId: 0
+}
 // verify Verification token 
 async function verifyVerificationToken(req, res, next) {
     const VerificationTokens = req.headers['x-verification-tokens'];
     try {
         if (VerificationTokens) {
             const verify = await jwt.verify(VerificationTokens, process.env.JWT_AUTH_SECRET);
-            const user = await userModal.findOne({ email: verify.email, isVerified: false })
+            const user = await userModal.findOne({ email: verify.email, isVerified: false }, exclude)
             if (user) {
                 req.body.user = user
             } else {
@@ -35,7 +43,15 @@ async function verifyAuthToken(req, res, next) {
             const verify = await jwt.verify(auth_tokens, process.env.JWT_AUTH_SECRET);
 
             if (verify?.id) {
-                const user = await userModal.findOne({ _id: verify?.id, isVerified: true })
+                const user = await userModal.findOne({ _id: verify?.id, isVerified: true }, exclude).populate({
+                    path: 'contacts',
+                    select: 'users',
+                    // populate: {
+                    //     path: 'users',
+                    //     model: 'User',
+                    //     select: 'firstName lastName email about'
+                    // }
+                })
                 req.body.user = user
             } else {
                 throw new Error("Invalid token! Please login first");
@@ -63,7 +79,7 @@ async function verifyAccessToken(req, res, next) {
         const verify = await jwt.verify(access_tokens, process.env.JWT_ACCESS_SECRET);
 
         const { _id, username, email } = verify
-        const user = await userModal.findOne({ _id, username, email, isVerified: true, disabled: false })
+        const user = await userModal.findOne({ _id, username, email, isVerified: true, disabled: false }, exclude)
         if (!user) {
             throw new Error("Invalid token! Please login first");
         }
