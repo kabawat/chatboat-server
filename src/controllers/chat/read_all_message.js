@@ -6,6 +6,7 @@ async function mark_read_all_message(req, res) {
         const chatID = req.body?.chat_id;
         const userID = req.body?.userID;
 
+        // Update documents where userID is not in the mark_as_read array
         const result = await chatModal.updateMany(
             { chat_id: chatID, mark_as_read: { $nin: [userID] } },
             { $push: { mark_as_read: userID } }

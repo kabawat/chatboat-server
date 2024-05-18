@@ -1,7 +1,7 @@
 /**
  * @swagger
- * /mark-read-all-message:
- *   post:
+ * /api/chat/:
+ *   put:
  *     summary: Mark all messages as read
  *     description: Marks all messages in a chat as read for a specific user.
  *     tags:
