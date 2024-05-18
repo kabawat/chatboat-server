@@ -8,7 +8,8 @@ const exclude = {
     otp: 0,
     isVerified: 0,
     disabled: 0,
-    socketId: 0
+    socketId: 0,
+    contacts: 0
 }
 // verify Verification token 
 async function verifyVerificationToken(req, res, next) {
@@ -43,15 +44,7 @@ async function verifyAuthToken(req, res, next) {
             const verify = await jwt.verify(auth_tokens, process.env.JWT_AUTH_SECRET);
 
             if (verify?.id) {
-                const user = await userModal.findOne({ _id: verify?.id, isVerified: true }, exclude).populate({
-                    path: 'contacts',
-                    select: 'users',
-                    // populate: {
-                    //     path: 'users',
-                    //     model: 'User',
-                    //     select: 'firstName lastName email about'
-                    // }
-                })
+                const user = await userModal.findOne({ _id: verify?.id, isVerified: true }, exclude)
                 req.body.user = user
             } else {
                 throw new Error("Invalid token! Please login first");
