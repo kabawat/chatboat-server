@@ -5,7 +5,6 @@ const sendNotification = require('#root/src/web-hooks/slack');
 const exclude = {
     password: 0,
     token: 0,
-    otp: 0,
     isVerified: 0,
     disabled: 0,
     socketId: 0,
@@ -44,7 +43,7 @@ async function verifyAuthToken(req, res, next) {
             const verify = await jwt.verify(auth_tokens, process.env.JWT_AUTH_SECRET);
 
             if (verify?.id) {
-                const user = await userModal.findOne({ _id: verify?.id, isVerified: true }, exclude)
+                const user = await userModal.findOne({ _id: verify?.id, isVerified: true }, { ...exclude, otp: 0 })
                 req.body.user = user
             } else {
                 throw new Error("Invalid token! Please login first");
@@ -72,7 +71,7 @@ async function verifyAccessToken(req, res, next) {
         const verify = await jwt.verify(access_tokens, process.env.JWT_ACCESS_SECRET);
 
         const { _id, username, email } = verify
-        const user = await userModal.findOne({ _id, username, email, isVerified: true, disabled: false }, exclude)
+        const user = await userModal.findOne({ _id, username, email, isVerified: true, disabled: false }, { ...exclude, otp: 0})
         if (!user) {
             throw new Error("Invalid token! Please login first");
         }

@@ -5,7 +5,7 @@ async function verifyEmail(req, res) {
     try {
         const { otp, user } = req.body
         // Check if the provided OTP matches the OTP stored in the database
-        if (otp !== user.otp) {
+        if (otp != user.otp) {
             // Throw an error if the OTP is invalid
             throw new Error("Oops! Wrong secret code entered!")
         }
