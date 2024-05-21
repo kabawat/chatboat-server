@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /api/chat/:
+ * /api/message/:
  *   post:
  *     summary: Get all messages.
  *     tags:

@@ -4,7 +4,7 @@
  *   get:
  *     summary: Retrieve all chat data
  *     tags:
- *       - Chat Message
+ *       - Chat
  *     parameters:
  *       - in: header
  *         name: x-auth-tokens

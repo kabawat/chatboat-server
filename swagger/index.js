@@ -21,6 +21,7 @@ const options = {
         './swagger/users/*.js',
         './swagger/contact/*.js',
         './swagger/chat/*.js',
+        './swagger/message/*.js',
 
     ], // Path to the API routes directory
 };
