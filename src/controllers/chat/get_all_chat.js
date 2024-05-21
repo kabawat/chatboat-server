@@ -31,14 +31,19 @@ async function get_all_chat(req, res) {
 
         // Use Promise.all to fetch the latest chat for each contact ID
         const chat_list = await Promise.all(contact_ids_List.map(async chat_id => {
-            const latestChat = await chatModal.findOne({ chat_id }).sort({ _id: -1 }).limit(1);
+            const latestChat = await chatModal.findOne({
+                chat_id,
+                delete_from: { $ne: req.body.user?._id } // Exclude messages where delete_from contains the user's ID 
+            }).sort({ _id: -1 }).limit(1);
+
             if (latestChat) {
-                const { sender, receiver, chat_id, mark_as_read, text, createdAt } = latestChat
-                return { sender, receiver, chat_id, mark_as_read, text, createdAt }
+                const { sender, receiver, chat_id, mark_as_read, text, createdAt } = latestChat;
+                return { sender, receiver, chat_id, mark_as_read, text, createdAt };
             } else {
-                return {}
+                return {};
             }
         }));
+
 
         // Combine the contact list and chat list, adding the last chat for each contact
         const finalContactList = constact_list?.map((current_contact) => {

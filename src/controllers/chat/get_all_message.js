@@ -3,18 +3,25 @@ const sendNotification = require("#root/src/web-hooks/slack");
 
 async function get_all_message(req, res) {
     try {
-        const { sender, chat_id, page, limit = 10 } = req.body;
+        const { chat_id, page, limit = 10, user } = req.body; // Extract user from the request body
         const limitNum = parseInt(limit, 10);
         const pageNum = parseInt(page, 10);
 
         // Calculate the starting index of the documents to fetch
         const skip = (pageNum - 1) * limitNum;
 
-        // Fetch the messages with pagination
-        const mapping = await chatModal.find({ chat_id }).skip(skip).limit(limitNum).sort({ createdAt: -1 });
+        // Fetch the messages with pagination and exclude messages with the user in delete_from
+        const mapping = await chatModal.find({
+            chat_id,
+            delete_from: { $ne: user._id } // Exclude messages where delete_from contains the user's ID
+        }).skip(skip).limit(limitNum).sort({ createdAt: -1 });
 
         // Get the total count of documents
-        const totalMessages = await chatModal.countDocuments({ chat_id });
+        const totalMessages = await chatModal.countDocuments({
+            chat_id,
+            delete_from: { $ne: user._id } // Same condition for counting
+        });
+
         res.status(200).json({
             status: true,
             data: mapping.reverse(),
