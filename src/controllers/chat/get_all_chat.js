@@ -37,8 +37,8 @@ async function get_all_chat(req, res) {
             }).sort({ _id: -1 }).limit(1);
 
             if (latestChat) {
-                const { sender, receiver, chat_id, mark_as_read, text, createdAt } = latestChat;
-                return { sender, receiver, chat_id, mark_as_read, text, createdAt };
+                const { sender, receiver, chat_id, mark_as_read, text, createdAt, _id } = latestChat;
+                return { sender, receiver, chat_id, mark_as_read, text, createdAt, _id };
             } else {
                 return {};
             }
