@@ -10,6 +10,6 @@ router.use('/contact', contactRouter)
 router.use('/message', messageRouter)
 router.use('/auth', authRouter)
 router.use('/user', userRouter)
-router.use('/chat', chatRouter) 
+router.use('/chat', chatRouter)
 
 module.exports = router

@@ -5,7 +5,7 @@ async function get_all_user(req, res) {
     try {
         // Querying the database for verified users not in the current user's contacts list
         const user_mapping = await userModal.findOne({ isVerified: true, _id: req.body?.user?._id }, 'contacts').populate('contacts')
-        let contactList = []
+        let contactList = [req.body?.user?._id]
         user_mapping?.contacts?.map(contacts => {
             contactList.push(contacts?.users[0])
             contactList.push(contacts?.users[1])

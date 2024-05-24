@@ -5,7 +5,6 @@ const sendNotification = require('#root/src/web-hooks/slack');
 const exclude = {
     password: 0,
     token: 0,
-    isVerified: 0,
     disabled: 0,
     socketId: 0,
     contacts: 0
