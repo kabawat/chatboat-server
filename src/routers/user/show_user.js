@@ -11,7 +11,23 @@ async function get_all_user(req, res) {
             contactList.push(contacts?.users[1])
         });
 
-        const users = await userModal.find({ isVerified: true, _id: { $nin: contactList } }, 'firstName lastName username phoneNumber about profilePicture')
+        let users = []
+        if (req.query.search) {
+            // Build the search criteria
+            let criteria = [];
+
+            if (req.query.search) {
+                const regex = new RegExp(req.query.search, 'i'); // 'i' makes it case-insensitive
+                criteria.push({ firstName: regex });
+                criteria.push({ lastName: regex });
+                criteria.push({ email: regex });
+                criteria.push({ username: regex });
+            }
+            users = await userModal.find({ isVerified: true, _id: { $nin: contactList }, $or: criteria }, 'firstName lastName username phoneNumber about profilePicture')
+        } else {
+            users = await userModal.find({ isVerified: true, _id: { $nin: contactList } }, 'firstName lastName username phoneNumber about profilePicture')
+        }
+
         if (users) {
             res.status(200).json({
                 data: users,
