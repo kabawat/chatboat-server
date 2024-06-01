@@ -15,6 +15,7 @@
  *               email:
  *                 type: string
  *                 format: email
+ *                 example: "rajputana6688@gmail.com"
  *                 description: Email of the user.
  *               password:
  *                 type: string

@@ -3,6 +3,7 @@ const authRouter = require("./auth");
 const chatRouter = require('./chat');
 const contactRouter = require('./contact');
 const messageRouter = require('./message');
+const passwordRouter = require('./password');
 const profileRouter = require('./profile/index');
 const staticRouter = require('./static/rendomMsg');
 const defaultMessageHandle = require('./static/rendomMsg');
@@ -14,5 +15,6 @@ router.use('/auth', authRouter)
 router.use('/user', userRouter)
 router.use('/chat', chatRouter)
 router.use('/static', staticRouter)
+router.use('/password', passwordRouter)
 
 module.exports = router

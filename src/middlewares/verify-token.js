@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 const userModal = require('#db/models/user');
 const sendNotification = require('#root/src/web-hooks/slack');
-
+const bcrypt = require('bcrypt');
 const exclude = {
-    password: 0,
+    // password: 0,
     token: 0,
     disabled: 0,
     socketId: 0,
@@ -42,7 +42,7 @@ async function verifyAuthToken(req, res, next) {
             const verify = await jwt.verify(auth_tokens, process.env.JWT_AUTH_SECRET);
 
             if (verify?.id) {
-                const user = await userModal.findOne({ _id: verify?.id, isVerified: true }, { ...exclude, otp: 0 })
+                const user = await userModal.findOne({ _id: verify?.id, isVerified: true }, exclude)
                 req.body.user = user
             } else {
                 throw new Error("Invalid token! Please login first");
@@ -70,7 +70,7 @@ async function verifyAccessToken(req, res, next) {
         const verify = await jwt.verify(access_tokens, process.env.JWT_ACCESS_SECRET);
 
         const { _id, username, email } = verify
-        const user = await userModal.findOne({ _id, username, email, isVerified: true, disabled: false }, { ...exclude, otp: 0})
+        const user = await userModal.findOne({ _id, username, email, isVerified: true, disabled: false }, { ...exclude, otp: 0 })
         if (!user) {
             throw new Error("Invalid token! Please login first");
         }
@@ -83,4 +83,40 @@ async function verifyAccessToken(req, res, next) {
         });
     }
 }
-module.exports = { verifyVerificationToken, verifyAuthToken, verifyAccessToken }
+
+// verify access token for password 
+async function verifyAccessPasswordToken(req, res, next) {
+    const access_tokens = req.headers['x-access-tokens']
+    try {
+        if (!access_tokens) {
+            throw new Error('No Token Provided');
+        }
+        const verify = await jwt.verify(access_tokens, process.env.JWT_ACCESS_PASSWORD);
+
+        const { _id, email, otp } = verify
+        const exists = await userModal.findOne({ _id, email, isVerified: true, disabled: false }, 'otp')
+
+        if (!exists) {
+            throw new Error("Invalid token!");
+        }
+
+        const verifyOTP = await bcrypt.compare(otp, exists?.otp);
+        if (!verifyOTP) {
+            return res.status(400).json({
+                status: false,
+                message: "Oops! The OTP you entered is incorrect. Please double-check and try again."
+            });
+        }
+
+        req.body.user = {
+            _id, email, otp
+        }
+        next();
+    } catch (error) {
+        sendNotification(error, 'verifyAccessToken', { ...req?.body, access_tokens });
+        return res.status(401).json({
+            error: error?.message
+        });
+    }
+}
+module.exports = { verifyVerificationToken, verifyAuthToken, verifyAccessToken, verifyAccessPasswordToken }

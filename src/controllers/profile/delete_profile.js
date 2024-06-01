@@ -3,6 +3,8 @@ const otp_send_on_email = require('#root/src/utils/email/sendEmail');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const userModal = require('#root/src/db/models/user');
+const { delete_profile_temp } = require('#root/src/helper/email/delete_profile_temp');
+const { generate_otp } = require('#root/src/helper/generate_otp');
 
 // Define an asynchronous function to delete a user profile
 async function delete_profile(req, res) {
@@ -18,16 +20,20 @@ async function delete_profile(req, res) {
 
         // Compare the provided password with the user's stored password
         const verifyPwd = await bcrypt.compare(req?.body?.password, password);
-
+        
         // If the passwords do not match, throw an error indicating invalid credentials
         if (!verifyPwd) {
             throw new Error("Invalid credentials. Please check your password and try again.");
         }
-
+        
         // Send an OTP to the user's email address
-        const email_res = await otp_send_on_email(req?.body?.email);
+        const subject = "Account Deletion Request - OTP Verification"
+        const otp = generate_otp()
+        const body = delete_profile_temp(req.body?.user?.firstName, otp)
+        const receivers = [req?.body?.email]
+        const email_res = await otp_send_on_email(receivers, subject, body);
 
-        const hash_otp = await bcrypt.hash(email_res?.otp, 10);
+        const hash_otp = await bcrypt.hash(otp, 10);
 
         // Update the user's OTP in the database
         const updated = await userModal.updateOne({ _id, email, username, isVerified: true }, { otp: hash_otp })

@@ -21,7 +21,35 @@ app.get("/", (req, res) => {
     res.send(`<a href='https://kabawat.com'>welcome to kabawat studio</a> <script>window.location.href = "https://kabawat.com"</script>`)
 })
 app.use('/api', router)
+
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+app.get('/test', (req, res) => {
+    // Extract headers
+    const headers = req.headers;
+
+    // Extract device information
+    const userAgent = headers['user-agent'];
+    const os = headers['sec-ch-ua-platform'];
+    const ip = req.ip; // Extract IP address
+    const timestamp = new Date().toISOString(); // Current time
+
+    // Assuming you have a location service to get the user's location
+    const location =""; // Function to get user's location
+
+    // Construct the response object
+    const deviceInfo = {
+        browser: userAgent,
+        os: os,
+        time: timestamp,
+        location: location,
+        ip_address: ip
+    };
+
+    // Respond with the device information
+    res.json(deviceInfo);
+});
+
 // server listen 
 app.listen(port, () => {
     connectDB().then(() => {
