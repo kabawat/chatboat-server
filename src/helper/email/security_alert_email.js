@@ -1,4 +1,17 @@
-function security_alert_email(user, ip_address, timestamp) {
+function security_alert_email_temp(user, deviceInfo) {
+    const { location, browser, ip_address, timestamp = new Date() } = deviceInfo;
+    const options = {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true // for AM/PM format
+    };
+
+    const formattedTimestamp = new Intl.DateTimeFormat('en-US', options).format(timestamp);
+
     return (`
             <!DOCTYPE html>
             <html>
@@ -12,7 +25,10 @@ function security_alert_email(user, ip_address, timestamp) {
                 <p>The following details were recorded:</p>
                 <ul>
                     <li>IP Address: ${ip_address}</li>
-                    <li>Timestamp: ${timestamp}</li>
+                    <li>Timestamp: ${formattedTimestamp}</li>
+                    <li>Location: ${location}</li>
+                    <li>Device OS: ${browser.OS}</li>
+                    <li>Browser: ${browser.browser}</li>
                 </ul>
                 <p>If you did not initiate this action, we recommend taking the following steps:</p>
                 <ol>
@@ -29,4 +45,4 @@ function security_alert_email(user, ip_address, timestamp) {
     `);
 }
 
-module.exports = { security_alert_email };
+module.exports = { security_alert_email_temp };
