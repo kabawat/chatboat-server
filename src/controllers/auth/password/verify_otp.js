@@ -28,7 +28,7 @@ async function verify_otp(req, res) {
         const token = await jwt.sign({ _id, email, otp: req.body.otp }, process.env.JWT_ACCESS_PASSWORD, { expiresIn: '10m' });
         res.status(200).json({
             status: true,
-            access_Token: token,
+            access_token: token,
             message: "OTP verify successfull"
         });
 

@@ -86,16 +86,14 @@ async function verifyAccessToken(req, res, next) {
 
 // verify access token for password 
 async function verifyAccessPasswordToken(req, res, next) {
-    const access_tokens = req.headers['x-access-tokens']
+    const access_tokens = req.headers['x-access-token']
     try {
         if (!access_tokens) {
             throw new Error('No Token Provided');
         }
         const verify = await jwt.verify(access_tokens, process.env.JWT_ACCESS_PASSWORD);
-
         const { _id, email, otp } = verify
-        const exists = await userModal.findOne({ _id, email, isVerified: true, disabled: false }, 'otp')
-
+        const exists = await userModal.findOne({ _id, email, isVerified: true, disabled: false })
         if (!exists) {
             throw new Error("Invalid token!");
         }

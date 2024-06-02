@@ -16,7 +16,6 @@ async function change_password(req, res) {
         }
         //  Find a user in the database
         const exists = await userModal.findOne({ _id: req?.body?.user?._id, email: req.body?.user?.email, isVerified: true })
-
         // Compare the provided OTP with the one stored in the database
         const verifyOTP = await bcrypt.compare(req.body?.user?.otp, exists?.otp);
 
@@ -31,7 +30,6 @@ async function change_password(req, res) {
         exists['password'] = await bcrypt.hash(req.body?.password, 10);
         exists['otp'] = null
         await exists.save();
-
         //Get the user's name and device information
         const name = `${exists?.firstName} ${exists?.lastName}`
         const deviceInfo = await get_request_infomation(req)

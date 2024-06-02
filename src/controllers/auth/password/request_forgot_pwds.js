@@ -38,7 +38,7 @@ async function forgot_password_send_otp(req, res) {
 
         // Update the user's OTP in the database
         const OTP = await bcrypt.hash(otp, 10)
-        const updated = await userModal.updateOne({ _id: user._id }, { $set: { otp: OTP } })
+        const updated = await userModal.updateOne({ _id: user._id }, { otp: OTP })
 
         res.status(200).json({
             access_token: token,

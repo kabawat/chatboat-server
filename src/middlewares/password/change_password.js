@@ -9,7 +9,7 @@ function check_password_headers(req, res, next) {
     }
 
     // check if the "token present 
-    if (!headers['x-access-tokens']) {
+    if (!headers['x-access-token']) {
         return res.status(400).json({
             status: false,
             message: "access tokens not provided in 'x-access-tokens' header."

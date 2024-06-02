@@ -9,8 +9,9 @@ function security_alert_email_temp(user, deviceInfo) {
         second: '2-digit',
         hour12: true // for AM/PM format
     };
-
-    const formattedTimestamp = new Intl.DateTimeFormat('en-US', options).format(timestamp);
+    
+    const date = new Date(timestamp)
+    const formattedTimestamp = new Intl.DateTimeFormat('en-US', options).format(date);
 
     return (`
             <!DOCTYPE html>

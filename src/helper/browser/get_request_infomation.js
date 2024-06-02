@@ -3,7 +3,6 @@ const getAddress = require("#root/src/services/findLocation");
 
 async function get_request_infomation(req) {
     try {
-
         const headers = req.headers;
         const user_agent = headers['user-agent']
         const { lat, lon } = headers
