@@ -13,7 +13,7 @@ async function get_all_chat(req, res) {
                 populate: {
                     path: 'users',
                     model: 'User',
-                    select: 'firstName lastName email about',
+                    select: 'firstName lastName email about profilePicture',
                     match: { _id: { $ne: req.body.user?._id } } // Exclude the user with the specified ID
                 }
             });
@@ -25,8 +25,13 @@ async function get_all_chat(req, res) {
         // For each contact, extract the user details (email, firstName, lastName, about, _id) and the chat ID
         const constact_list = user_mapping?.contacts.map((it_contact) => {
             contact_ids_List.push(`${it_contact?._id}`)
-            const { email, firstName, lastName, about, _id, } = it_contact?.users[0]
-            return { email, firstName, lastName, about, _id, chat_id: it_contact?._id, createdAt: it_contact?.createdAt }
+            const { email, firstName, lastName, about, _id, profilePicture } = it_contact?.users[0]
+            return {
+                email, firstName, lastName, about, _id,
+                chat_id: it_contact?._id,
+                createdAt: it_contact?.createdAt,
+                picture: profilePicture?.secure_url || null
+            }
         });
 
         // Use Promise.all to fetch the latest chat for each contact ID
