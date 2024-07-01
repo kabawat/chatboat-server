@@ -21,6 +21,12 @@ const userSchema = new mongoose.Schema({
             ref: "Contact"
         }
     ],
+    blocked_contact: [
+        {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: "User"
+        }
+    ],
     firstName: String,
     lastName: String,
     dateOfBirth: Date,

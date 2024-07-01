@@ -43,3 +43,24 @@ project-root/
 │───.gitignore                                  # Specifies ignored files in git
 │───LICENSE                                     # License information for your project
 └───...
+
+<!-- create -->
+PORT=2917
+ENVIRONMENT=dev
+MONGODB_URI_DEV=mongodb://0.0.0.0:27017
+MONGODB_URI=mongodb://0.0.0.0:27017
+
+JWT_AUTH_SECRET=23l4k2l3k4j2o039lk24lj
+JWT_ACCESS_SECRET=kljlk2j43lkjl4098f989
+JWT_ACCESS_PASSWORD=laskdjfoisfuaosij23jk4
+
+<!-- cloudnary -->
+CLOUD_NAME=<cloud name>
+API_KEY=<api key>
+API_SECRET=<API secret>
+
+GMAIL_USER=<Your email id>
+GMAIL_PASS=<App password>
+
+WEBHOOK_URL=https://hooks.slack.com/services/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
+SERVER_URL=http://localhost:2917
