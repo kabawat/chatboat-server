@@ -4,7 +4,6 @@ const sendNotification = require("#root/src/web-hooks/slack");
 async function get_all_contact(req, res) {
     try {
         const mapping = await userModal.find({ isVerified: true }, 'about username, firstName, lastName profilePicture email')
-        await mapping.save()
         if (mapping) {
             res.status(200).json({
                 data: mapping,

@@ -1,15 +1,19 @@
-const userModal = require("#root/src/db/models/user");
+const contactModal = require("#root/src/db/models/contact");
 const sendNotification = require("#root/src/web-hooks/slack");
 
 async function block_contact(req, res) {
     try {
-        const contact_user = await userModal.findOne({ _id: req.body.contact }, 'email')
-        if (!contact_user) {
+        const res_contact = await contactModal.findOne({ _id: req.body.chat_id })
+        if (!res_contact) {
             console.log('User not found');
             return;
         }
-        req.body.user.blocked_contact.push(contact_user?._id)
-        await req.body.user.save()
+        if (req.body.block) {
+            res_contact.blocked_by.push(req.body.user?._id)
+        } else {
+            res_contact.blocked_by = res_contact.blocked_by.filter(id => `${id}` != `${req.body.user?._id}`)
+        }
+        await res_contact.save()
         res.status(200).json({
             status: true,
             message: 'Contact user successfully blocked',

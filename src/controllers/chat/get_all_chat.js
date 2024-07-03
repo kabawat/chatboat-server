@@ -9,7 +9,7 @@ async function get_all_chat(req, res) {
         const user_mapping = await userModal.findOne({ _id: req.body.user?._id }, 'contacts')
             .populate({
                 path: 'contacts',
-                select: 'users createdAt',
+                select: 'users createdAt blocked_by',
                 populate: {
                     path: 'users',
                     model: 'User',
@@ -20,17 +20,19 @@ async function get_all_chat(req, res) {
 
         // Initialize an empty array to store contact IDs
         let contact_ids_List = []
-
         // Map over the contacts array and extract the contact IDs
         // For each contact, extract the user details (email, firstName, lastName, about, _id) and the chat ID
         const constact_list = user_mapping?.contacts.map((it_contact) => {
+            const blockList = it_contact.blocked_by.map(id => id.toString())
             contact_ids_List.push(`${it_contact?._id}`)
             const { email, firstName, lastName, about, _id, profilePicture } = it_contact?.users[0]
             return {
                 email, firstName, lastName, about, _id,
                 chat_id: it_contact?._id,
                 createdAt: it_contact?.createdAt,
-                picture: profilePicture?.secure_url || null
+                picture: profilePicture?.secure_url || null,
+                is_block: blockList.length ? true : false, // Check if the contact is blocked
+                blocked_by: blockList
             }
         });
 
