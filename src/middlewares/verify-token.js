@@ -60,6 +60,32 @@ async function verifyAuthToken(req, res, next) {
     }
 }
 
+// veirfy  token 
+async function verifyToken(req, res, next) {
+    const auth_tokens = req.headers['x-auth-tokens']
+    try {
+        if (auth_tokens) {
+            const verify = await jwt.verify(auth_tokens, process.env.JWT_AUTH_SECRET);
+
+            if (verify?.id) {
+                const user = await userModal.findOne({ _id: verify?.id, isVerified: true })
+                req.body.user = user
+            } else {
+                throw new Error("Invalid token! Please login first");
+            }
+        }
+        else {
+            throw new Error('No Token Provided');
+        }
+        next();
+    } catch (error) {
+        sendNotification(error, 'verifyAuthToken', { ...req?.body, auth_tokens });
+        return res.status(401).json({
+            error: error?.message
+        });
+    }
+}
+
 // verify access token 
 async function verifyAccessToken(req, res, next) {
     const access_tokens = req.headers['x-access-tokens']
@@ -111,10 +137,10 @@ async function verifyAccessPasswordToken(req, res, next) {
         }
         next();
     } catch (error) {
-        sendNotification(error, 'verifyAccessToken', { ...req?.body, access_tokens });
+        sendNotification(error, 'verifyAccessPasswordToken', { ...req?.body,...req.headers, access_tokens });
         return res.status(401).json({
             error: error?.message
         });
     }
 }
-module.exports = { verifyVerificationToken, verifyAuthToken, verifyAccessToken, verifyAccessPasswordToken }
+module.exports = { verifyVerificationToken, verifyAuthToken, verifyAccessToken, verifyAccessPasswordToken, verifyToken }
