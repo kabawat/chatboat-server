@@ -4,8 +4,9 @@ const { reset_password_temp } = require("#root/src/helper/email/reset_password_t
 const { generate_otp } = require("#root/src/helper/generate_otp") // Function to generate OTP
 const otp_send_on_email = require("#root/src/utils/email/sendEmail") // Function to send email with OTP
 const sendNotification = require("#root/src/web-hooks/slack") // Function to send notification to Slack
-const jwt = require('jsonwebtoken')
+const SECRET = require("#root/src/config/env.config")
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
 async function forgot_password_send_otp(req, res) {
     try {
         // Find the user in the database with the given email and isVerified status
@@ -34,7 +35,7 @@ async function forgot_password_send_otp(req, res) {
         const email_res = await otp_send_on_email(receivers, subject, body);
 
         // Generate a JSON Web Token with the user's _id, email, and username
-        const token = await jwt.sign({ _id, email, username }, process.env.JWT_ACCESS_SECRET, { expiresIn: '10m' });
+        const token = await jwt.sign({ _id, email, username }, SECRET.JWT_ACCESS_SECRET, { expiresIn: '10m' });
 
         // Update the user's OTP in the database
         const OTP = await bcrypt.hash(otp, 10)

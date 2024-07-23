@@ -1,3 +1,4 @@
+const SECRET = require("../config/env.config");
 const fetch = require("node-fetch");
 
 // Color codes for different types of logs
@@ -48,7 +49,7 @@ function sendNotification(error, functionName, payload, type = 'error') {
 
     const headers = { "Content-Type": "application/json" };
 
-    fetch(process.env.WEBHOOK_URL, {
+    fetch(SECRET.WEBHOOK_URL, {
         method: "POST",
         headers: headers,
         body: JSON.stringify(formattedMessage),

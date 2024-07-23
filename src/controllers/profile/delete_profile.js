@@ -1,10 +1,11 @@
 // Import required modules
-const otp_send_on_email = require('#root/src/utils/email/sendEmail');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const userModal = require('#root/src/db/models/user');
 const { delete_profile_temp } = require('#root/src/helper/email/delete_profile_temp');
+const otp_send_on_email = require('#root/src/utils/email/sendEmail');
 const { generate_otp } = require('#root/src/helper/generate_otp');
+const userModal = require('#root/src/db/models/user');
+const SECRET = require('#root/src/config/env.config');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // Define an asynchronous function to delete a user profile
 async function delete_profile(req, res) {
@@ -20,12 +21,12 @@ async function delete_profile(req, res) {
 
         // Compare the provided password with the user's stored password
         const verifyPwd = await bcrypt.compare(req?.body?.password, password);
-        
+
         // If the passwords do not match, throw an error indicating invalid credentials
         if (!verifyPwd) {
             throw new Error("Invalid credentials. Please check your password and try again.");
         }
-        
+
         // Send an OTP to the user's email address
         const subject = "Account Deletion Request - OTP Verification"
         const otp = generate_otp()
@@ -43,7 +44,7 @@ async function delete_profile(req, res) {
         }
 
         // Generate a new JWT token for the user
-        const token = await jwt.sign({ _id, email, username }, process.env.JWT_ACCESS_SECRET, { expiresIn: '5m' });
+        const token = await jwt.sign({ _id, email, username }, SECRET.JWT_ACCESS_SECRET, { expiresIn: '5m' });
 
         // Return a success response with the message and the new token
         res.status(200).json({

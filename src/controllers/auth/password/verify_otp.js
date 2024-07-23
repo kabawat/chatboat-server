@@ -1,7 +1,8 @@
-const userModal = require("#root/src/db/models/user");
 const sendNotification = require("#root/src/web-hooks/slack");
-const jwt = require('jsonwebtoken')
+const userModal = require("#root/src/db/models/user");
+const SECRET = require("#root/src/config/env.config");
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
 async function verify_otp(req, res) {
     try {
         if (!req?.body?.otp) {
@@ -25,7 +26,7 @@ async function verify_otp(req, res) {
             });
         }
         const { _id, email } = exists
-        const token = await jwt.sign({ _id, email, otp: req.body.otp }, process.env.JWT_ACCESS_PASSWORD, { expiresIn: '10m' });
+        const token = await jwt.sign({ _id, email, otp: req.body.otp }, SECRET.JWT_ACCESS_PASSWORD, { expiresIn: '10m' });
         res.status(200).json({
             status: true,
             access_token: token,

@@ -1,8 +1,9 @@
-const jwt = require("jsonwebtoken");
-const userModal = require("#db/models/user");
 const { extractUsername } = require("#utils/extract_username");
-const bcrypt = require('bcrypt');
 const sendNotification = require("#root/src/web-hooks/slack");
+const userModal = require("#db/models/user");
+const SECRET = require("#root/src/config/env.config");
+const bcrypt = require('bcrypt');
+const jwt = require("jsonwebtoken");
 
 // This function creates a new user account with the provided information.
 // It first checks if the user already exists, and if so, updates their information if they haven't verified their email yet.
@@ -14,7 +15,7 @@ async function createInity(req, res) {
             throw new Error("Hold up! Names can't be blank. Fill 'em in!");
         }
         // Generate a JWT token for the user's email
-        const token = jwt.sign({ email: req.body.email }, process.env.JWT_AUTH_SECRET);
+        const token = jwt.sign({ email: req.body.email }, SECRET.JWT_AUTH_SECRET);
 
         // Check if the user already exists in the database
         const userExists = await userModal.findOne({ email: req.body.email });

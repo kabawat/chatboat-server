@@ -1,11 +1,12 @@
-const userModal = require("#db/models/user");
 const sendNotification = require("#root/src/web-hooks/slack");
+const userModal = require("#db/models/user");
+const SECRET = require("#root/src/config/env.config");
 const jwt = require('jsonwebtoken');
 
 async function finishSignup(req, res) {
     const { user } = req.body;
     try {
-        const token = jwt.sign({ _id: user._id }, process.env.JWT_AUTH_SECRET);
+        const token = jwt.sign({ _id: user._id }, SECRET.JWT_AUTH_SECRET);
         const dataSet = {
             token: token,
             isVerified: true
@@ -33,7 +34,7 @@ async function finishSignup(req, res) {
     } catch (error) {
         console.error("Error in finishSignup:", error);
         sendNotification(error, 'finishSignup', req?.body);
-         //Send error response to client
+        //Send error response to client
         res.status(400).json({
             message: "An error occurred during signup process.",
             status: false

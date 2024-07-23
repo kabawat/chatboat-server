@@ -1,13 +1,14 @@
-const cloudinary = require('cloudinary').v2;
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
 const sendNotification = require('#root/src/web-hooks/slack');
+const cloudinary = require('cloudinary').v2;
+const SECRET = require('../config/env.config');
+const path = require('path');
+const os = require('os');
+const fs = require('fs');
 
 cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET,
+    cloud_name: SECRET.CLOUD_NAME,
+    api_key: SECRET.API_KEY,
+    api_secret: SECRET.API_SECRET,
 });
 
 async function uploadImage(req, res, next) {

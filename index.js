@@ -1,21 +1,13 @@
+const SECRET = require('./src/config/env.config');
 const express = require('express')
-const http = require('http')
-const { Server } = require('socket.io')
 const swaggerUi = require('swagger-ui-express');
 const app = express()
 const fileUpload = require('express-fileupload')
-const path = require('path')
-const dot = require('dotenv').config()
 const connectDB = require('#config/databaseConfig')
 const router = require('#routers/index');
 const cors = require('cors');
 const specs = require('./swagger');
-const parseUserAgent = require('#root/src/services/parseUserAgent');
-const { default: axios } = require('axios');
-const port = process.env.PORT || 2917
-const NodeGeocoder = require('node-geocoder');
-const getAddress = require('#root/src/services/findLocation');
-const get_request_infomation = require('./src/helper/browser/get_request_infomation');
+const port = SECRET.PORT || 2917
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cors(
@@ -26,7 +18,7 @@ app.use(fileUpload())
 // Middleware to block Postman in production
 app.use((req, res, next) => {
     const userAgent = req.headers['postman-token'];
-    const isProduction = process.env.ENVIRONMENT != 'dev';
+    const isProduction = SECRET.ENVIRONMENT != 'dev';
     if (isProduction && userAgent) {
         res.status(403).send('Forbidden: Postman requests are not allowed');
     } else {
