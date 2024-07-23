@@ -1,7 +1,8 @@
-const jwt = require('jsonwebtoken');
-const userModal = require('#db/models/user');
 const sendNotification = require('#root/src/web-hooks/slack');
+const userModal = require('#db/models/user');
+const SECRET = require('../config/env.config');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const exclude = {
     // password: 0,
     token: 0,
@@ -14,7 +15,7 @@ async function verifyVerificationToken(req, res, next) {
     const VerificationTokens = req.headers['x-verification-tokens'];
     try {
         if (VerificationTokens) {
-            const verify = await jwt.verify(VerificationTokens, process.env.JWT_AUTH_SECRET);
+            const verify = await jwt.verify(VerificationTokens, SECRET.JWT_AUTH_SECRET);
             const user = await userModal.findOne({ email: verify.email, isVerified: false }, exclude)
             if (user) {
                 req.body.user = user
@@ -39,7 +40,7 @@ async function verifyAuthToken(req, res, next) {
     const auth_tokens = req.headers['x-auth-tokens']
     try {
         if (auth_tokens) {
-            const verify = await jwt.verify(auth_tokens, process.env.JWT_AUTH_SECRET);
+            const verify = await jwt.verify(auth_tokens, SECRET.JWT_AUTH_SECRET);
 
             if (verify?.id) {
                 const user = await userModal.findOne({ _id: verify?.id, isVerified: true }, exclude)
@@ -65,7 +66,7 @@ async function verifyToken(req, res, next) {
     const auth_tokens = req.headers['x-auth-tokens']
     try {
         if (auth_tokens) {
-            const verify = await jwt.verify(auth_tokens, process.env.JWT_AUTH_SECRET);
+            const verify = await jwt.verify(auth_tokens, SECRET.JWT_AUTH_SECRET);
 
             if (verify?.id) {
                 const user = await userModal.findOne({ _id: verify?.id, isVerified: true })
@@ -93,7 +94,7 @@ async function verifyAccessToken(req, res, next) {
         if (!access_tokens) {
             throw new Error('No Token Provided');
         }
-        const verify = await jwt.verify(access_tokens, process.env.JWT_ACCESS_SECRET);
+        const verify = await jwt.verify(access_tokens, SECRET.JWT_ACCESS_SECRET);
 
         const { _id, username, email } = verify
         const user = await userModal.findOne({ _id, username, email, isVerified: true, disabled: false }, { ...exclude, otp: 0 })
@@ -117,7 +118,7 @@ async function verifyAccessPasswordToken(req, res, next) {
         if (!access_tokens) {
             throw new Error('No Token Provided');
         }
-        const verify = await jwt.verify(access_tokens, process.env.JWT_ACCESS_PASSWORD);
+        const verify = await jwt.verify(access_tokens, SECRET.JWT_ACCESS_PASSWORD);
         const { _id, email, otp } = verify
         const exists = await userModal.findOne({ _id, email, isVerified: true, disabled: false })
         if (!exists) {
@@ -137,7 +138,7 @@ async function verifyAccessPasswordToken(req, res, next) {
         }
         next();
     } catch (error) {
-        sendNotification(error, 'verifyAccessPasswordToken', { ...req?.body,...req.headers, access_tokens });
+        sendNotification(error, 'verifyAccessPasswordToken', { ...req?.body, ...req.headers, access_tokens });
         return res.status(401).json({
             error: error?.message
         });

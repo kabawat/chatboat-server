@@ -1,3 +1,4 @@
+const SECRET = require('#root/src/config/env.config');
 const swaggerJsdoc = require('swagger-jsdoc');
 
 const options = {
@@ -10,7 +11,7 @@ const options = {
         },
         servers: [
             {
-                url: process.env.SERVER_URL, // Change this URL as per your server
+                url: SECRET.SERVER_URL, // Change this URL as per your server
             },
         ],
     },

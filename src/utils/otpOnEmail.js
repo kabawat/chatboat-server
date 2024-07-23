@@ -1,5 +1,6 @@
-const nodemailer = require('nodemailer');
 const sendNotification = require('#root/src/web-hooks/slack');
+const nodemailer = require('nodemailer');
+const SECRET = require('../config/env.config');
 require('dotenv').config(); // Load environment variables from .env file
 
 async function otpOnEmail(req, res, next) {
@@ -21,14 +22,14 @@ async function otpOnEmail(req, res, next) {
         let transporter = nodemailer.createTransport({
             service: 'Gmail', // e.g., 'Gmail'
             auth: {
-                user: process.env.GMAIL_USER,
-                pass: process.env.GMAIL_PASS
+                user: SECRET.GMAIL_USER,
+                pass: SECRET.GMAIL_PASS
             }
         });
 
         // Send mail with defined transport object
         let info = await transporter.sendMail({
-            from: '"Query Boat" <' + process.env.GMAIL_USER + '>', // sender name and address
+            from: '"Query Boat" <' + SECRET.GMAIL_USER + '>', // sender name and address
             to: [receivers], // list of receivers
             subject: 'OTP Verification', // Subject line
             html: `Your OTP is: ${otp}` // html body, uncomment if you want to send HTML content

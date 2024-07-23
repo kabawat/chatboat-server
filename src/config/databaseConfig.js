@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const SECRET = require('./env.config');
 require('dotenv').config();
-const { ENVIRONMENT, MONGODB_URI, MONGODB_URI_DEV } = process.env
+const { ENVIRONMENT, MONGODB_URI, MONGODB_URI_DEV } = SECRET
 const URI = () => {
     if (ENVIRONMENT == "dev") return MONGODB_URI_DEV
     else return MONGODB_URI;
