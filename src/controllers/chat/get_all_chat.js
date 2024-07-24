@@ -13,7 +13,7 @@ async function get_all_chat(req, res) {
                 populate: {
                     path: 'users',
                     model: 'User',
-                    select: 'firstName lastName email about profilePicture',
+                    select: 'firstName lastName email about profilePicture isOnline lastSeen',
                     match: { _id: { $ne: req.body.user?._id } } // Exclude the user with the specified ID
                 }
             });
@@ -25,9 +25,9 @@ async function get_all_chat(req, res) {
         const constact_list = user_mapping?.contacts.map((it_contact) => {
             const blockList = it_contact.blocked_by.map(id => id.toString())
             contact_ids_List.push(`${it_contact?._id}`)
-            const { email, firstName, lastName, about, _id, profilePicture } = it_contact?.users[0]
+            const { email, firstName, lastName, about, _id, profilePicture, isOnline, lastSeen } = it_contact?.users[0]
             return {
-                email, firstName, lastName, about, _id,
+                email, firstName, lastName, about, _id, isOnline, lastSeen,
                 chat_id: it_contact?._id,
                 createdAt: it_contact?.createdAt,
                 picture: profilePicture?.secure_url || null,
@@ -35,6 +35,7 @@ async function get_all_chat(req, res) {
                 blocked_by: blockList
             }
         });
+
 
         // Use Promise.all to fetch the latest chat for each contact ID
         const chat_list = await Promise.all(contact_ids_List.map(async chat_id => {
@@ -62,7 +63,7 @@ async function get_all_chat(req, res) {
         });
 
         // Sort the final contact list by the last chat's createdAt date
-        const sort_data = finalContactList.sort((a, b) => {
+        const sort_data = finalContactList?.sort((a, b) => {
             return new Date(getCreatedAt(b)).getTime() - new Date(getCreatedAt(a)).getTime();
         });
 
