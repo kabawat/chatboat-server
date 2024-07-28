@@ -13,7 +13,8 @@ async function get_all_message(req, res) {
         // Fetch the messages with pagination and exclude messages with the user in delete_from
         const mapping = await chatModal.find({
             chat_id,
-            delete_from: { $ne: user._id } // Exclude messages where delete_from contains the user's ID
+            delete_from: { $ne: user._id }, // Exclude messages where delete_from contains the user's ID
+            mark_as_read: { $in: user._id } // Include messages where mark_as_read contains the user's ID
         }).skip(skip).limit(limitNum).sort({ createdAt: -1 });
 
         // Get the total count of documents

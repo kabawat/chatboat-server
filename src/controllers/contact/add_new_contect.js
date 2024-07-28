@@ -1,7 +1,7 @@
+const sendNotification = require("#root/src/web-hooks/slack");
 const contactModal = require("#root/src/db/models/contact");
 const userModal = require("#root/src/db/models/user");
-const sendNotification = require("#root/src/web-hooks/slack");
-
+const mongoose = require('mongoose')
 async function add_new_contact(req, res) {
     try {
         const userId = req?.body?.user?._id;  // logedin user
@@ -34,12 +34,25 @@ async function add_new_contact(req, res) {
                 chat_id: contact_id
             }
         } else {
+            const isUserExists = await userModal.findOne({ isVerified: true, _id: new mongoose.Types.ObjectId(contactId) }, 'about createdAt email firstName lastName')
+            if (!isUserExists) {
+                return res.status(400).json({
+                    status: false,
+                    error: "Contact not found"
+                });
+            }
             const contactData = new contactModal({
                 users: [contactId, userId]
             });
             const contactSaved = await contactData.save();
             contact_id = contactSaved._id
+            res_data = {
+                ...isUserExists._doc,
+                last_chat: [],
+                chat_id: contact_id
+            }
         }
+
 
         // Update user's contact list if the user is verified
         const user = await userModal.findOne({ isVerified: true, _id: userId });
