@@ -6,7 +6,7 @@ async function mark_read_all_message(req, res) {
         const chatID = req.body?.chat_id;
         const userID = req.body?.user?._id;
         if (req.body.only_read) {
-            const result = await chatModal.updateMany(
+            await chatModal.updateMany(
                 { chat_id: chatID, mark_as_read: { $nin: [userID] } },
                 { $push: { mark_as_read: userID } }
             );
@@ -21,7 +21,7 @@ async function mark_read_all_message(req, res) {
                 mark_as_read: { $ne: userID } // Exclude messages where mark_as_read contains the user's ID
             }).sort({ createdAt: -1 });
             // Update documents where userID is not in the mark_as_read array
-            const result = await chatModal.updateMany(
+            await chatModal.updateMany(
                 { chat_id: chatID, mark_as_read: { $nin: [userID] } },
                 { $push: { mark_as_read: userID } }
             );

@@ -36,7 +36,7 @@ async function get_all_chat(req, res) {
             }
         });
 
-
+        let total = 0
         // Use Promise.all to fetch the latest chat for each contact ID
         const chat_list = await Promise.all(contact_ids_List.map(async chat_id => {
             const latestChat = await chatModal.findOne({
@@ -44,13 +44,20 @@ async function get_all_chat(req, res) {
                 delete_from: { $ne: req.body.user?._id } // Exclude messages where delete_from contains the user's ID 
             }).sort({ _id: -1 }).limit(1);
 
+            const totalUnRead = await chatModal.countDocuments({
+                chat_id,
+                delete_from: { $ne: req.body.user._id }, // Same condition for counting
+                mark_as_read: { $ne: req.body.user._id } // Same condition for counting
+            });
+            total = totalUnRead
             if (latestChat) {
                 const { sender, receiver, chat_id, mark_as_read, text, createdAt, _id } = latestChat;
-                return { sender, receiver, chat_id, mark_as_read, text, createdAt, _id };
+                return { sender, receiver, chat_id, mark_as_read, text, createdAt, _id, totalUnRead };
             } else {
                 return {};
             }
         }));
+
 
 
         // Combine the contact list and chat list, adding the last chat for each contact
@@ -58,7 +65,8 @@ async function get_all_chat(req, res) {
             let isExistsChat = chat_list.find(item => `${item.chat_id}` == `${current_contact.chat_id}`)
             return {
                 ...current_contact,
-                last_chat: isExistsChat
+                last_chat: isExistsChat,
+                totalUnRead: total
             }
         });
 
